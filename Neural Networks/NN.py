@@ -8,9 +8,7 @@ import pickle, numpy as np, os
 import cv2
 import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report
-
-
-# -----------------------------------------------------------------
+#-----------------------------------------------------------------
 class Datasets(torch.utils.data.Dataset):
     def __init__(self, root, train=True, tf=None):
         if train:
@@ -25,11 +23,9 @@ class Datasets(torch.utils.data.Dataset):
                 self.images.extend(data[b'data'])
                 self.labels.extend(data[b'labels'])
 
-        self.tf = tf
-
+        self.tf=tf
     def __len__(self):
         return len(self.labels)
-
     def __getitem__(self, index):
         image = self.images[index]
         image = image.reshape(3, 32, 32).transpose(2, 0, 1)
@@ -38,7 +34,6 @@ class Datasets(torch.utils.data.Dataset):
             image = self.tf(image)
         label = self.labels[index]
         return image, label
-
 
 # Build Model from scratch hehehehehee=))))
 class NN(nn.Module):
@@ -57,12 +52,10 @@ class NN(nn.Module):
             nn.Linear(256, numClasses),
             nn.ReLU()
         )
-
     def forward(self, x):
         return self.model(x)
 
-
-# -----------------------------------------------------------------
+#-----------------------------------------------------------------
 tf = Compose([
     ToTensor()
 ])
@@ -103,18 +96,18 @@ for epoch in range(epochs):
         lossVal.backward()
         opt.step()
         if iter % 100 == 0:
-            print(f"Epoch {epoch}/{epochs} | Iter {iter}/{len(trainLoader)} | Loss {lossVal}")
-# tinh accuracy :))))), ko phai chat gpt dau nhe:))
+          print(f"Epoch {epoch}/{epochs} | Iter {iter}/{len(trainLoader)} | Loss {lossVal}")
+#tinh accuracy :))))), ko phai chat gpt dau nhe:))
 Model.eval()
 predictions = []
 LabelsVal = []
 for epoch in range(epochs):
-    for iter, (imgs, lbs) in enumerate(testLoader):
+      for iter, (imgs, lbs) in enumerate(testLoader):
         LabelsVal.extend(lbs)
         with torch.no_grad():
             preds = Model(imgs)
-            id = torch.max(preds, dim=1)
-            predictions.extend(torch.argmax(id))
+            _, id = torch.max(preds, dim=1)
+            predictions.extend(id)
             lossVal = criterion(preds, lbs)
 predictions = [x.item() for x in predictions]
 LabelsVal = [x.item() for x in LabelsVal]
@@ -124,4 +117,4 @@ print(LabelsVal)
 # _---------------------------------------------------_
 print(classification_report(LabelsVal, predictions))
 print("Completed")
-exit(0)     
+exit(0)
