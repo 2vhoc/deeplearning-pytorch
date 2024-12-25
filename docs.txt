@@ -1,0 +1,3 @@
+Bài tập về build datasets local và deep learning với pytorch
+- pytorchBasic là học pytorch basic
+- còn lại là exercises (nhớ giải nén các file trong từng folder  nhé)
